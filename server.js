@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import connectDb from "./config/db.js";
 import router from "./routes/router.js";
+import fileRoute from "./routes/fileRouter.js";
+import projectRoute from "./routes/projectRouter.js";
 dotenv.config();
 
 const app = express();
@@ -25,6 +27,8 @@ const startServer = async () => {
   await connectDb();
 
   app.use("/api", router);
+  app.use("/api/project", projectRoute);
+  app.use("/api/file",fileRoute);
   app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
   });
