@@ -4,8 +4,8 @@ import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import router from "./routes/router";
-import connectDb from "./config/db";
+import connectDb from "./config/db.js";
+import router from "./routes/router.js";
 dotenv.config();
 
 const app = express();
@@ -18,7 +18,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.static(path.join(__dirname, "./public")));
 app.use(cookieParser());
 app.use(morgan("tiny"));
 
@@ -27,7 +26,7 @@ const startServer = async () => {
 
   app.use("/api", router);
   app.listen(PORT, () => {
-    console.log("Server is running on port 3000");
+    console.log("Server is running on port " + PORT);
   });
 };
 
