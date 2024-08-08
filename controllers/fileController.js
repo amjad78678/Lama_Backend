@@ -11,7 +11,69 @@ const createProjectFile = async (req, res) => {
     const fileData = await projectFile.save();
 
     if (fileData) {
-      res.status(200).json({ success: true,message: "File created" });
+      res.status(200).json({ success: true, message: "File created" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+const getProjectFilesData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const fileProjectDatas = await ProjectFile.find({ projectId: id });
+
+    if (fileProjectDatas) {
+      res.status(200).json({ success: true, files: fileProjectDatas });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+const getFileData = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const fileData = await ProjectFile.findOne({
+      _id: fileId,
+    });
+
+    if (fileData) {
+      res.status(200).json({ success: true, file: fileData });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+const editFileData = async (req, res) => {
+  try {
+    const { fileId, description } = req.body;
+
+    console.log("i am in edit file body", req.body);
+    const fileData = await ProjectFile.updateOne(
+      {
+        _id: fileId,
+      },
+      { $set: { description: description } }
+    );
+
+    if (fileData) {
+      res
+        .status(200)
+        .json({ success: true, file: fileData, message: "File edited" });
     }
   } catch (error) {
     console.error("Error:", error);
@@ -23,4 +85,4 @@ const createProjectFile = async (req, res) => {
   }
 };
 
-export { createProjectFile };
+export { createProjectFile, getProjectFilesData, getFileData, editFileData };

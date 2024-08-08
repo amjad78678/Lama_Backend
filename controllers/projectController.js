@@ -53,9 +53,4 @@ const getProjectData = async (req, res) => {
   }
 };
 
-export {
-
-  createProject,
-  getProjects,
-  getProjectData,
-};
+export { createProject, getProjects, getProjectData };
