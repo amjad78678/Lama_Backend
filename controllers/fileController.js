@@ -84,5 +84,32 @@ const editFileData = async (req, res) => {
     });
   }
 };
+const deleteFile = async (req, res) => {
+  try {
+    const { fileId } = req.body;
+    console.log('fileid',fileId)
+    const data = await ProjectFile.deleteOne({ _id: fileId });
+    console.log("i am in delete file", data);
+    if (!data.acknowledged) {
+      return res
+        .status(404)
+        .json({ success: false, message: "File not found" });
+    }
+    res.status(200).json({ success: true, message: "File deleted" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
 
-export { createProjectFile, getProjectFilesData, getFileData, editFileData };
+export {
+  createProjectFile,
+  getProjectFilesData,
+  getFileData,
+  editFileData,
+  deleteFile,
+};

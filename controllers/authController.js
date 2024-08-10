@@ -109,6 +109,8 @@ const userLogout = async (req, res) => {
 const getUserData = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.userId });
+    console.log("userid", req.userId);
+    console.log("iam user", user);
     const s3 = new S3Client({
       credentials: {
         accessKeyId: process.env.BUCKET_ACCESS_KEY,
@@ -116,26 +118,27 @@ const getUserData = async (req, res) => {
       },
       region: process.env.BUCKET_REGION,
     });
-    const getObjectParams = {
-      Bucket: process.env.BUCKET_NAME,
-      Key: user.image,
-    };
 
-    const command = new GetObjectCommand(getObjectParams);
-    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    if (user) {
+      if (user.image !== null) {
+        const getObjectParams = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: user.image,
+        };
 
-    if (!user) {
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        console.log("iam url", { ...user._doc, image: url });
+        res
+          .status(200)
+          .json({ success: true, user: { ...user._doc, image: url } });
+      } else {
+        res.status(200).json({ success: true, user });
+      }
+    } else {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
-    }
-    if (user.image !== process.env.DEFAULT_USER_IMAGE) {
-      console.log("iam url", { ...user._doc, image: url });
-      res
-        .status(200)
-        .json({ success: true, user: { ...user._doc, image: url } });
-    } else {
-      res.status(200).json({ success: true, user });
     }
   } catch (error) {
     console.error("Error:", error);
