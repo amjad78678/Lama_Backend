@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import {
