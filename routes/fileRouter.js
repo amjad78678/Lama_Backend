@@ -7,7 +7,6 @@ import {
   getProjectFilesData,
 } from "../controllers/fileController.js";
 const fileRoute = express.Router();
-
 fileRoute.post("/create", protect, createProjectFile);
 fileRoute.get("/get/:id", protect, getProjectFilesData);
 fileRoute.get("/getFileData/:fileId", protect, getFileData);
