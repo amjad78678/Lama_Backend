@@ -182,7 +182,7 @@ const editUserData = async (req, res) => {
       }
     } else {
       await User.updateOne(
-        { projectId: req.body.projectId },
+        { _id: req.userId },
         { $set: req.body }
       );
     }
